@@ -1,5 +1,4 @@
 using Rayforge.Core.Rendering.Blitter;
-using System;
 using UnityEngine;
 
 using Rayforge.Core.Rendering.Blitter.Helpers;
