@@ -28,7 +28,7 @@ Older versions may cause compatibility issues.
 3. Select `Add package from git URL…`
 4. Enter the following URL:
    ```
-   https://github.com/rayforge-math/RayforgeUnityLibraryCore.git
+   https://github.com/rayforge-math/RayforgeUnityLibraryCore.git#1.0.0
    ```
 5. Click **Add** and wait for the installation to complete
 
@@ -38,7 +38,7 @@ Older versions may cause compatibility issues.
 2. Select `Add package from git URL…`
 3. Enter the following URL:
    ```
-   https://github.com/rayforge-math/RayforgeUnityLibraryCore.git#Blitter
+   https://github.com/rayforge-math/TexturePacker.git
    ```
 4. Click **Add**
 
