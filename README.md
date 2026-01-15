@@ -21,23 +21,37 @@ Older versions may cause compatibility issues.
 
 ### Via Unity Package Manager
 
+#### Step 1: Install Rayforge Core Library
+
 1. Open Unity and navigate to `Window > Package Manager`
 2. Click the **+** icon in the top-left corner
 3. Select `Add package from git URL…`
 4. Enter the following URL:
    ```
-   https://github.com/rayforge-math/TexturePacker.git
+   https://github.com/rayforge-math/RayforgeUnityLibraryCore.git
    ```
-5. Click **Add**
+5. Click **Add** and wait for the installation to complete
+
+#### Step 2: Install Texture Packer
+
+1. In the Package Manager, click the **+** icon again
+2. Select `Add package from git URL…`
+3. Enter the following URL:
+   ```
+   https://github.com/rayforge-math/RayforgeUnityLibraryCore.git#Blitter
+   ```
+4. Click **Add**
+
+The Texture Packer will be downloaded and added to your project.
+
+> **Important:** The Rayforge Core Library must be installed first, as the Texture Packer depends on it.
 
 ## Setup
 
-The Texture Packer automatically checks for required dependencies on first launch:
+The Texture Packer automatically checks for required dependencies on each launch:
 
-- **Rayforge Core Library** (required) - Installed automatically if missing
-- **Scriptable Render Pipeline (SRP)** (optional) - Not installed automatically, notice displayed if needed for specific features
-
-> **Note:** Optional dependencies are shown in the installer GUI for reference only and are not automatically installed.
+- **Rayforge Core Library** - Installed automatically if missing
+- **Scriptable Render Pipeline (SRP)** - Not installed automatically, notice displayed
 
 ### Manual
 
