@@ -1,0 +1,23 @@
+{
+  "name": "com.rayforge.texturepacker",
+  "version": "1.0.0",
+  "displayName": "Texture Packer",
+  "description": "Texture Packer for channel packing.",
+  "unity": "6000.0",
+  "unityRelease": "58f2",
+  "keywords": [
+    "channel",
+    "texture",
+    "splat",
+    "channelpacking"
+  ],
+  "author": {
+    "name": "Rayforge",
+    "email": "info@rayforge.eu",
+    "url": "https://rayforge.eu/"
+  },
+  "dependencies": {
+    "com.unity.render-pipelines.core": "17.0.4",
+    "com.rayforge.core": "1.0.0"
+  }
+}

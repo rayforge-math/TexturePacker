@@ -1,0 +1,22 @@
+{
+    "name": "Rayforge.TexturePacker.Editor",
+    "rootNamespace": "Rayforge.TexturePacker.Editor",
+    "references": [
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:3eae0364be2026648bf74846acb8a731",
+        "GUID:e6f2d665f4bf1a44a97d94df58ad9d8e",
+        "GUID:ff3a1049741fd4a42aa481921e8b9ecd",
+        "GUID:ccec72bdca257d44d8d0bbd0e2c82383"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

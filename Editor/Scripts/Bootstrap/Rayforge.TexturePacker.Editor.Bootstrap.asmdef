@@ -1,0 +1,16 @@
+{
+    "name": "Rayforge.TexturePacker.Editor.Bootstrap",
+    "rootNamespace": "Rayforge.TexturePacker.Editor.Bootstrap",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
