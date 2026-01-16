@@ -43,9 +43,6 @@ namespace Rayforge.TexturePacker.Editor
         /// </summary>
         private PingPongBuffer<RenderTexture> packedTextures = new(null, null);
 
-        private Texture2D _blackTexture;
-        private Texture2D _whiteTexture;
-
         /// <summary>
         /// Opens the Texture Packer window in Unity.
         /// </summary>
@@ -456,25 +453,6 @@ namespace Rayforge.TexturePacker.Editor
             packedTextures.SetFirst(ReAllocTexture(tex, workingPreset.resolution, rtFormat));
             tex = packedTextures.Second;
             packedTextures.SetSecond(ReAllocTexture(tex, workingPreset.resolution, rtFormat));
-
-            CreateFallbackTextures();
-        }
-
-        private void CreateFallbackTextures()
-        {
-            if (_blackTexture == null)
-            {
-                _blackTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-                _blackTexture.SetPixel(0, 0, Color.black);
-                _blackTexture.Apply();
-            }
-
-            if (_whiteTexture == null)
-            {
-                _whiteTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-                _whiteTexture.SetPixel(0, 0, Color.white);
-                _whiteTexture.Apply();
-            }
         }
 
         private void CleanupRenderTextures()
@@ -493,23 +471,6 @@ namespace Rayforge.TexturePacker.Editor
 
             packedTextures.SetFirst(null);
             packedTextures.SetSecond(null);
-
-            CleanupFallbackTextures();
-        }
-
-        private void CleanupFallbackTextures()
-        {
-            if (_blackTexture != null)
-            {
-                DestroyImmediate(_blackTexture);
-                _blackTexture = null;
-            }
-
-            if (_whiteTexture != null)
-            {
-                DestroyImmediate(_whiteTexture);
-                _whiteTexture = null;
-            }
         }
 
         /// <summary>
