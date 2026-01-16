@@ -151,8 +151,9 @@ The tool will prompt you to choose an export location and filename when packing.
 
 ## Support
 
-For issues or questions, please visit the [GitHub repository](https://github.com/rayforge-math/RayforgeUnityLibraryCore).
+For issues or questions, please visit the [GitHub repository](https://github.com/rayforge-math/TexturePacker) or 
+write an e-mail to [info@rayforge.eu](mailto:info@rayforge.eu?subject=TexturePacker%20Issue).
 
 ## License
 
-See the LICENSE file in the repository for licensing information.
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
