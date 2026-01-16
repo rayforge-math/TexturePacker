@@ -89,11 +89,25 @@ For each of the four output channels (R, G, B, A):
 2. **Source Texture**: Assign the input texture
 3. **Source Channel**: Select which channel (R, G, B, or A) to read from the source
 4. **Force White**: Override source data with white (useful for masks)
-5. **Invert**: Invert the channel values (1 - value)
+5. **Invert**: Invert the channel values ()
 6. **Multiplier**: Scale the channel values (0.0 - 2.0)
 7. **Clear**: Reset the channel to default settings
 
 Click **Clear All** to reset all four channels at once.
+
+---
+
+> **Technical Note on Data Processing:**
+> The **Compute Shader** always performs the initial direct binary blit to ensure data integrity. The **Invert** and **Multiplier** adjustments are only processed during a subsequent **Raster Blit** operation on normalized data.
+
+**When using Multiplier = 1 & Invert = false, only the Compute Blit is triggered:**
+
+* **Bit-Perfect Transfer:** Since the Compute Shader handles the raw transfer, these default settings ensure that the binary representation of your source data remains 100% unchanged.
+* **PBR Packing:** Ideal for combining separate AO, Roughness, or Metallic maps into a single RGBA "PBR-Stack" without any mathematical deviation from the original authored content.
+* **Channel Swizzling:** Perfect for simply reordering channels (e.g., moving a mask from the Red channel to the Alpha channel) while maintaining data purity.
+* **Non-Color Data:** Recommended for ID maps or encoded data where any mathematical scaling (even at 1.0 precision) should be avoided to prevent rounding errors.
+
+---
 
 ### Output Settings
 
