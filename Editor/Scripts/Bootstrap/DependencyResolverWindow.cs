@@ -82,9 +82,13 @@ namespace Rayforge.TexturePacker.Editor.Bootstrap
             float aspect = (float)_headerImage.width / _headerImage.height;
             float width = position.width - 20;
             float height = width / aspect;
+            width /= 2;
+            height /= 2;
 
-            GUILayout.Label(_headerImage, GUILayout.Width(width), GUILayout.Height(height));
-            GUILayout.Space(10);
+            Rect headerRect = new Rect((position.width - width) / 2, 10, width, height);
+            GUI.DrawTexture(headerRect, _headerImage);
+
+            GUILayout.Space(10 + height);
         }
 
         private void DrawDescription()
@@ -155,7 +159,6 @@ namespace Rayforge.TexturePacker.Editor.Bootstrap
 
                 EditorGUILayout.LabelField(description, EditorStyles.wordWrappedMiniLabel);
 
-                // Statustext
                 string statusText;
                 if (installed)
                     statusText = "Status: Installed";

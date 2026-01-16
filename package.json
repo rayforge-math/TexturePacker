@@ -19,5 +19,6 @@
   "dependencies": {
     "com.unity.render-pipelines.core": "17.0.4",
     "com.rayforge.core": "1.0.0"
-  }
+  },
+  "_fingerprint": "7bee80a707cbe27a324955438b70c1341b34a7e5"
 }
