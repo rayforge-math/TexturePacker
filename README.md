@@ -131,6 +131,10 @@ The tool will prompt you to choose an export location and filename when packing.
 - Preview individual channels to verify correct source data before packing
 - Save presets for common packing configurations (e.g., PBR material maps)
 
+## Example
+
+![Window showing packed AO, Height and Roughness](Images/Window.png)
+
 ## Support
 
 For issues or questions, please visit the [GitHub repository](https://github.com/rayforge-math/RayforgeUnityLibraryCore).
