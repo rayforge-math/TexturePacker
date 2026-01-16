@@ -5,6 +5,7 @@ using UnityEditor;
 using Rayforge.Core.Rendering.Blitter;
 using Rayforge.Core.Rendering.Blitter.Helpers;
 using Rayforge.Core.Rendering.Collections;
+using UnityEngine.Rendering;
 
 namespace Rayforge.TexturePacker.Editor
 {
@@ -41,6 +42,9 @@ namespace Rayforge.TexturePacker.Editor
         /// Ping-pong buffer used for packing and previewing.
         /// </summary>
         private PingPongBuffer<RenderTexture> packedTextures = new(null, null);
+
+        private Texture2D _blackTexture;
+        private Texture2D _whiteTexture;
 
         /// <summary>
         /// Opens the Texture Packer window in Unity.
@@ -82,6 +86,23 @@ namespace Rayforge.TexturePacker.Editor
             RestoreLastPreset();
             EnsureWorkingPreset();
             ReAllocPackerTextures();
+
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            CleanupRenderTextures();
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredEditMode ||
+                state == PlayModeStateChange.EnteredPlayMode)
+            {
+                ReAllocPackerTextures();
+            }
         }
 
         /// <summary>
@@ -208,7 +229,14 @@ namespace Rayforge.TexturePacker.Editor
 
             GUILayout.BeginVertical();
             Rect previewRect = GUILayoutUtility.GetRect(256, 256, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
-            EditorGUI.DrawPreviewTexture(previewRect, packedTextures.Second);
+            if (packedTextures.Second != null && packedTextures.Second.IsCreated())
+            {
+                EditorGUI.DrawPreviewTexture(previewRect, packedTextures.Second);
+            }
+            else
+            {
+                EditorGUI.DrawPreviewTexture(previewRect, Texture2D.blackTexture);
+            }
             GUILayout.EndVertical();
 
             GUILayout.Space(10);
@@ -242,7 +270,12 @@ namespace Rayforge.TexturePacker.Editor
         /// <param name="finalize">If true, the texture will be exported.</param>
         private void CreatePackedTexture(bool finalize)
         {
-            ReAllocPackerTextures();
+            if (packedTextures.First == null || !packedTextures.First.IsCreated() ||
+                packedTextures.Second == null || !packedTextures.Second.IsCreated())
+            {
+                ReAllocPackerTextures();
+            }
+
             PerformComputePacking(finalize, PerformRasterBlit);
         }
 
@@ -260,6 +293,7 @@ namespace Rayforge.TexturePacker.Editor
 
             Texture2D[] textures = new Texture2D[4];
 
+            bool performRaster = false;
             for (int i = 0; i < 4; i++)
             {
                 var c = workingPreset.contributions[i];
@@ -270,6 +304,7 @@ namespace Rayforge.TexturePacker.Editor
                     SrcTexture = c.IsActive ? (SourceTexture)i : SourceTexture.None
                 });
 
+                performRaster |= (!Mathf.Approximately(c.multiply, 1.0f) || c.invert) && c.IsActive;
                 textures[i] = c.forceWhite ? Texture2D.whiteTexture : c.texture ?? Texture2D.blackTexture;
             }
 
@@ -297,15 +332,17 @@ namespace Rayforge.TexturePacker.Editor
 
             SanitizeInput(ref param, textures);
 
+            Action<AsyncGPUReadbackRequest> invokeRasterPass = (_) => { onComplete.Invoke(finalize); };
+
             ChannelBlitter.ComputeBlit(
                 textures[0],
                 textures[1],
                 textures[2],
                 textures[3],
-                packedTextures.First,
+                performRaster ? packedTextures.First : packedTextures.Second,
                 param,
                 true,
-                (_) => { onComplete.Invoke(finalize); }
+                performRaster ? invokeRasterPass : null
             );
         }
 
@@ -396,13 +433,15 @@ namespace Rayforge.TexturePacker.Editor
                 tex.height != resolution ||
                 tex.format != format)
             {
-                tex?.Release();
+                if(tex != null)
+                    tex.Release();
                 tex = new RenderTexture(resolution, resolution, 0, format)
                 {
                     enableRandomWrite = true
                 };
-                tex.Create();
             }
+            if(!tex.IsCreated())
+                tex.Create();
             return tex;
         }
 
@@ -417,6 +456,60 @@ namespace Rayforge.TexturePacker.Editor
             packedTextures.SetFirst(ReAllocTexture(tex, workingPreset.resolution, rtFormat));
             tex = packedTextures.Second;
             packedTextures.SetSecond(ReAllocTexture(tex, workingPreset.resolution, rtFormat));
+
+            CreateFallbackTextures();
+        }
+
+        private void CreateFallbackTextures()
+        {
+            if (_blackTexture == null)
+            {
+                _blackTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+                _blackTexture.SetPixel(0, 0, Color.black);
+                _blackTexture.Apply();
+            }
+
+            if (_whiteTexture == null)
+            {
+                _whiteTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+                _whiteTexture.SetPixel(0, 0, Color.white);
+                _whiteTexture.Apply();
+            }
+        }
+
+        private void CleanupRenderTextures()
+        {
+            if (packedTextures.First != null)
+            {
+                packedTextures.First.Release();
+                DestroyImmediate(packedTextures.First);
+            }
+
+            if (packedTextures.Second != null)
+            {
+                packedTextures.Second.Release();
+                DestroyImmediate(packedTextures.Second);
+            }
+
+            packedTextures.SetFirst(null);
+            packedTextures.SetSecond(null);
+
+            CleanupFallbackTextures();
+        }
+
+        private void CleanupFallbackTextures()
+        {
+            if (_blackTexture != null)
+            {
+                DestroyImmediate(_blackTexture);
+                _blackTexture = null;
+            }
+
+            if (_whiteTexture != null)
+            {
+                DestroyImmediate(_whiteTexture);
+                _whiteTexture = null;
+            }
         }
 
         /// <summary>
