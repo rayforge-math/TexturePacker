@@ -329,7 +329,17 @@ namespace Rayforge.TexturePacker.Editor
 
             SanitizeInput(ref param, textures);
 
-            Action<AsyncGPUReadbackRequest> invokeRasterPass = (_) => { onComplete.Invoke(finalize); };
+            Action<AsyncGPUReadbackRequest> invokeRasterPassOrExport = (_) => 
+            {
+                if (performRaster)
+                {
+                    onComplete.Invoke(finalize);
+                }
+                else if (finalize)
+                {
+                    TextureExporter.ExportRenderTexture(packedTextures.Second, workingPreset.textureFormat);
+                }
+            };
 
             ChannelBlitter.ComputeBlit(
                 textures[0],
@@ -339,7 +349,7 @@ namespace Rayforge.TexturePacker.Editor
                 performRaster ? packedTextures.First : packedTextures.Second,
                 param,
                 true,
-                performRaster ? invokeRasterPass : null
+                invokeRasterPassOrExport
             );
         }
 
