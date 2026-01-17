@@ -267,12 +267,7 @@ namespace Rayforge.TexturePacker.Editor
         /// <param name="finalize">If true, the texture will be exported.</param>
         private void CreatePackedTexture(bool finalize)
         {
-            if (packedTextures.First == null || !packedTextures.First.IsCreated() ||
-                packedTextures.Second == null || !packedTextures.Second.IsCreated())
-            {
-                ReAllocPackerTextures();
-            }
-
+            ReAllocPackerTextures();
             PerformComputePacking(finalize, PerformRasterBlit);
         }
 
